@@ -1,0 +1,107 @@
+:root {
+  --ink: #16253d;
+  --muted: #708099;
+  --line: #e6ebf2;
+  --surface: #ffffff;
+  --background: #f4f7fb;
+  --blue: #3568e8;
+  --blue-soft: #edf2ff;
+  --orange: #f59e0b;
+  --orange-soft: #fff7e6;
+  --shadow: 0 10px 28px rgba(35, 60, 103, 0.07);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--ink);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-shell { width: min(1160px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 28px; }
+.hero { margin-bottom: 24px; }
+.eyebrow, .section-kicker { color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 5px var(--blue-soft); }
+.hero-row, .summary-heading, .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+h1, h2, p { margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -.045em; line-height: 1.12; }
+.hero p { margin-top: 10px; color: var(--muted); font-size: 15px; }
+.year-control { flex: 0 0 auto; }
+.year-control label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.select-wrap { position: relative; }
+select { appearance: none; width: 140px; min-height: 46px; padding: 0 38px 0 15px; border: 1px solid #ced8e7; border-radius: 12px; color: var(--ink); background: var(--surface); font: inherit; font-weight: 700; cursor: pointer; outline: none; }
+select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+.select-wrap span { position: absolute; top: 10px; right: 14px; color: var(--blue); font-size: 20px; pointer-events: none; }
+.summary, .month-card { border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
+.summary { padding: 22px; margin-bottom: 34px; }
+.section-kicker { display: block; margin-bottom: 7px; }
+h2 { font-size: 21px; letter-spacing: -.02em; }
+.workday-pill { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
+.summary-item { min-height: 89px; padding: 14px 16px; border-radius: 13px; background: #f7f9fc; }
+.summary-item.primary { background: var(--blue); color: white; }
+.summary-label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; }
+.primary .summary-label { color: #dce6ff; }
+.summary-item strong { font-size: 28px; line-height: 1; letter-spacing: -.04em; }
+.summary-unit { margin-left: 4px; color: var(--muted); font-size: 12px; }
+.primary .summary-unit { color: #dce6ff; }
+.calendar-section { margin-bottom: 20px; }
+.section-heading { align-items: end; margin-bottom: 16px; }
+.legend { display: flex; gap: 15px; color: var(--muted); font-size: 12px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+.legend-dot.workday { background: var(--blue); }
+.legend-dot.weekend { background: #cbd3df; }
+.month-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.month-card { padding: 17px; transition: transform .2s ease, border-color .2s ease; }
+.month-card.current { border: 2px solid var(--blue); padding: 16px; }
+.month-card:hover { transform: translateY(-2px); }
+.month-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.month-name { font-size: 18px; font-weight: 750; }
+.current-label { display: inline-block; margin-left: 6px; padding: 3px 6px; border-radius: 5px; color: var(--blue); background: var(--blue-soft); font-size: 10px; font-weight: 700; vertical-align: 2px; }
+.month-workdays { color: var(--blue); font-size: 19px; font-weight: 800; }
+.month-workdays small { margin-left: 2px; color: var(--muted); font-size: 11px; font-weight: 500; }
+.weekday-row, .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+.weekday-row { margin-bottom: 5px; color: var(--muted); font-size: 10px; }
+.day { display: flex; align-items: center; justify-content: center; min-width: 0; height: 27px; border-radius: 6px; color: #41516a; font-size: 11px; }
+.day.workday { color: var(--blue); background: var(--blue-soft); font-weight: 700; }
+.day.weekend { color: #a2adbd; background: #f5f7fa; }
+.day.empty { background: transparent; }
+.month-stats { display: flex; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+.month-stats strong { margin-right: 2px; color: var(--ink); font-size: 12px; }
+footer { padding: 9px 0; color: var(--muted); font-size: 11px; text-align: center; }
+
+@media (max-width: 760px) {
+  .page-shell { width: min(100% - 24px, 560px); padding-top: 25px; }
+  .hero-row { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .year-control { width: 100%; }
+  select { width: 100%; }
+  .summary { padding: 18px; border-radius: 16px; }
+  .summary-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .summary-grid { gap: 7px; }
+  .summary-item { padding: 12px 10px; }
+  .summary-item strong { font-size: 23px; }
+  .summary-unit { display: block; margin: 4px 0 0; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .month-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .month-card { padding: 13px 10px; border-radius: 14px; }
+  .month-card.current { padding: 12px 9px; }
+  .month-name { font-size: 16px; }
+  .month-workdays { font-size: 17px; }
+  .day { height: 25px; font-size: 10px; }
+  .month-stats { gap: 8px; font-size: 10px; }
+  .month-stats strong { font-size: 11px; }
+}
+
+@media (max-width: 390px) {
+  .page-shell { width: calc(100% - 16px); }
+  .month-grid { gap: 8px; }
+  .month-card { padding-left: 7px; padding-right: 7px; }
+  .month-card.current { padding-left: 6px; padding-right: 6px; }
+  .day { height: 23px; }
+}

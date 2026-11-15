@@ -33,6 +33,14 @@
     addHoliday(holidays, year, 10, 3, "文化の日");
     addHoliday(holidays, year, 10, 23, "勤労感謝の日");
 
+    // Include the boundary holidays needed to calculate a substitute holiday
+    // across years (for example, Sunday 2023-12-31 -> Tuesday 2024-01-02).
+    var previousYearEnd = new Date(year - 1, 11, 31);
+    if (previousYearEnd.getDay() === 0) {
+      addHoliday(holidays, year - 1, 11, 31, "年末の休日");
+    }
+    addHoliday(holidays, year + 1, 0, 1, "元日");
+
     // The Olympic Games caused one-off date changes in 2020 and 2021.
     if (year === 2020) {
       addHoliday(holidays, year, 6, 23, "海の日");

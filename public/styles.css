@@ -28,9 +28,8 @@ body {
 .eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
 .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 5px var(--blue-soft); }
 .hero-row, .summary-heading, .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
-h1, h2, p { margin: 0; }
-h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -.045em; line-height: 1.12; }
-.hero p { margin-top: 10px; color: var(--muted); font-size: 15px; }
+.hero-row { align-items: flex-start; justify-content: flex-end; }
+h2, p { margin: 0; }
 .year-control { flex: 0 0 auto; }
 .year-control label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 12px; font-weight: 600; }
 .select-wrap { position: relative; }

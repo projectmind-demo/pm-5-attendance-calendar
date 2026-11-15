@@ -51,19 +51,33 @@ h2 { font-size: 21px; letter-spacing: -.02em; }
 .primary .summary-unit { color: #dce6ff; }
 .calendar-section { margin-bottom: 20px; }
 .section-heading { align-items: end; margin-bottom: 16px; }
-.legend { display: flex; gap: 15px; color: var(--muted); font-size: 12px; }
+.legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px 15px; color: var(--muted); font-size: 12px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
 .legend-dot.workday { background: var(--blue); }
 .legend-dot.weekend { background: #cbd3df; }
 .legend-dot.holiday { background: var(--orange); }
+.legend-dot.past { background: #9aa8ba; }
+.legend-dot.future { background: #6b8fe5; }
+.legend-dot.today { background: var(--ink); box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--blue); }
 .month-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .month-card { padding: 17px; transition: transform .2s ease, border-color .2s ease; }
+.month-card.past-month { color: #718097; background: #f8fafc; box-shadow: none; }
+.month-card.past-month .month-name,
+.month-card.past-month .month-workdays { color: #7d8ba0; }
+.month-card.past-month .day.workday { color: #7183a0; background: #eef2f7; }
+.month-card.past-month .day.weekend { color: #aeb8c5; background: #f1f4f7; }
+.month-card.future-month { border-color: #d7e1f4; background: #fcfdff; }
+.month-card.future-month .month-name { color: #254c99; }
 .month-card.current { border: 2px solid var(--blue); padding: 16px; }
+.month-card.current .month-name { color: var(--blue); }
 .month-card:hover { transform: translateY(-2px); }
 .month-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
 .month-name { font-size: 18px; font-weight: 750; }
 .current-label { display: inline-block; margin-left: 6px; padding: 3px 6px; border-radius: 5px; color: var(--blue); background: var(--blue-soft); font-size: 10px; font-weight: 700; vertical-align: 2px; }
+.month-status-label.past-month { color: #66758b; background: #edf1f5; }
+.month-status-label.future-month { color: #315ab1; background: #edf2ff; }
+.month-status-label.current { color: var(--blue); background: var(--blue-soft); }
 .month-workdays { color: var(--blue); font-size: 19px; font-weight: 800; }
 .month-workdays small { margin-left: 2px; color: var(--muted); font-size: 11px; font-weight: 500; }
 .weekday-row, .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
@@ -74,6 +88,17 @@ h2 { font-size: 21px; letter-spacing: -.02em; }
 .day.workday { color: var(--blue); background: var(--blue-soft); font-weight: 700; }
 .day.weekend { color: #a2adbd; background: #f5f7fa; }
 .day.holiday { color: #b45309; background: var(--orange-soft); box-shadow: inset 0 0 0 1px #f4c66b; font-weight: 800; }
+.day.today {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  background: var(--blue);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--blue);
+  font-weight: 800;
+}
+.day.today .holiday-name { color: #fff; }
+.day.today.holiday { color: #fff; background: #c56a00; box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--orange); }
+.day.today::after { content: "今日"; position: absolute; right: 3px; bottom: 2px; color: currentColor; font-size: 6px; line-height: 1; opacity: .9; }
 .day.empty { background: transparent; }
 .month-stats { display: flex; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 .month-stats strong { margin-right: 2px; color: var(--ink); font-size: 12px; }
@@ -98,6 +123,7 @@ footer { padding: 9px 0; color: var(--muted); font-size: 11px; text-align: cente
   .month-workdays { font-size: 17px; }
   .day { height: 36px; font-size: 10px; }
   .holiday-name { font-size: 6px; }
+  .day.today::after { right: 2px; bottom: 2px; font-size: 5px; }
   .month-stats { justify-content: space-between; gap: 4px; font-size: 10px; }
   .month-stats strong { font-size: 11px; }
 }

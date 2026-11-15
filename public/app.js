@@ -50,6 +50,7 @@
       addHoliday(holidays, year, 7, 8, "山の日");
       delete holidays[year + "-6-" + nthWeekday(year, 6, 1, 3)];
       delete holidays[year + "-7-" + nthWeekday(year, 7, 1, 2)];
+      delete holidays[year + "-7-11"];
       delete holidays[year + "-8-" + nthWeekday(year, 8, 1, 2)];
       delete holidays[year + "-10-" + nthWeekday(year, 10, 1, 2)];
     }
@@ -128,7 +129,7 @@
       var dayType = weekday === 0 || weekday === 6 ? "weekend" : "workday";
       if (holidayName) dayType += " holiday";
       var visibleHolidayName = holidayName && weekday !== 0 && weekday !== 6 ? holidayName : "";
-      var label = year + "年" + (month + 1) + "月" + day + "日" + (visibleHolidayName ? "、" + visibleHolidayName : (dayType === "weekend" ? "、土日" : "、平日"));
+      var label = year + "年" + (month + 1) + "月" + day + "日" + (visibleHolidayName ? "、" + visibleHolidayName : (weekday === 0 || weekday === 6 ? "、土日" : "、平日"));
       html += '<span class="day ' + dayType + '" aria-label="' + label + '" title="' + label + '"><b>' + day + '</b>' + (visibleHolidayName ? '<small class="holiday-name">' + visibleHolidayName + '</small>' : '') + '</span>';
     }
     html += '</div><div class="month-stats"><span><strong>' + stats.weekends + '</strong>土日</span><span><strong>' + stats.holidays + '</strong>祝日</span></div></article>';

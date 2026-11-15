@@ -142,7 +142,13 @@
     var holidays = getJapaneseHolidays(year);
     var cards = [];
     var monthOrder = [];
-    for (var index = 11; index >= 0; index -= 1) monthOrder.push(index);
+    if (year === currentYear) {
+      for (var offset = 0; offset < 12; offset += 1) {
+        monthOrder.push((currentMonth + offset) % 12);
+      }
+    } else {
+      for (var month = 0; month < 12; month += 1) monthOrder.push(month);
+    }
     monthOrder.forEach(function (month) {
       var result = makeCalendar(year, month, holidays);
       cards.push(result.html);

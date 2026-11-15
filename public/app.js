@@ -9,18 +9,106 @@
   var yearSelect = document.getElementById("yearSelect");
   var monthGrid = document.getElementById("monthGrid");
 
-  function countMonth(year, month) {
-    var days = new Date(year, month + 1, 0).getDate();
-    var workdays = 0;
-    for (var day = 1; day <= days; day += 1) {
-      var weekday = new Date(year, month, day).getDay();
-      if (weekday !== 0 && weekday !== 6) workdays += 1;
-    }
-    return { days: days, workdays: workdays, weekends: days - workdays };
+  function addHoliday(holidays, year, month, day, name) {
+    var key = year + "-" + month + "-" + day;
+    if (!holidays[key]) holidays[key] = name;
   }
 
-  function makeCalendar(year, month) {
-    var stats = countMonth(year, month);
+  function getJapaneseHolidays(year) {
+    var holidays = {};
+    addHoliday(holidays, year, 0, 1, "元日");
+    addHoliday(holidays, year, 0, nthWeekday(year, 0, 1, 2), "成人の日");
+    addHoliday(holidays, year, 1, 11, "建国記念の日");
+    addHoliday(holidays, year, 1, 23, "天皇誕生日");
+    addHoliday(holidays, year, 2, vernalEquinoxDay(year), "春分の日");
+    addHoliday(holidays, year, 3, 29, "昭和の日");
+    addHoliday(holidays, year, 4, 3, "憲法記念日");
+    addHoliday(holidays, year, 4, 4, "みどりの日");
+    addHoliday(holidays, year, 4, 5, "こどもの日");
+    addHoliday(holidays, year, 6, nthWeekday(year, 6, 1, 3), "海の日");
+    addHoliday(holidays, year, 7, 11, "山の日");
+    addHoliday(holidays, year, 8, nthWeekday(year, 8, 1, 3), "敬老の日");
+    addHoliday(holidays, year, 8, autumnalEquinoxDay(year), "秋分の日");
+    addHoliday(holidays, year, 9, nthWeekday(year, 9, 1, 2), "スポーツの日");
+    addHoliday(holidays, year, 10, 3, "文化の日");
+    addHoliday(holidays, year, 10, 23, "勤労感謝の日");
+
+    // The Olympic Games caused one-off date changes in 2020 and 2021.
+    if (year === 2020) {
+      addHoliday(holidays, year, 6, 23, "海の日");
+      addHoliday(holidays, year, 6, 24, "スポーツの日");
+      addHoliday(holidays, year, 7, 10, "山の日");
+      delete holidays[year + "-6-" + nthWeekday(year, 6, 1, 3)];
+      delete holidays[year + "-9-" + nthWeekday(year, 9, 1, 2)];
+    }
+    if (year === 2021) {
+      addHoliday(holidays, year, 6, 22, "海の日");
+      addHoliday(holidays, year, 6, 23, "スポーツの日");
+      addHoliday(holidays, year, 7, 8, "山の日");
+      delete holidays[year + "-6-" + nthWeekday(year, 6, 1, 3)];
+      delete holidays[year + "-7-11"];
+      delete holidays[year + "-9-" + nthWeekday(year, 9, 1, 2)];
+    }
+
+    // A weekday between two holidays is a 国民の休日.
+    for (var month = 0; month < 12; month += 1) {
+      var days = new Date(year, month + 1, 0).getDate();
+      for (var day = 2; day < days; day += 1) {
+        var key = year + "-" + month + "-" + day;
+        var date = new Date(year, month, day);
+        var previous = holidays[year + "-" + month + "-" + (day - 1)];
+        var next = holidays[year + "-" + month + "-" + (day + 1)];
+        if (!holidays[key] && date.getDay() !== 0 && date.getDay() !== 6 && previous && next) {
+          addHoliday(holidays, year, month, day, "国民の休日");
+        }
+      }
+    }
+
+    // When a holiday falls on Sunday, the next non-holiday day is a 振替休日.
+    Object.keys(holidays).forEach(function (key) {
+      var parts = key.split("-").map(Number);
+      var date = new Date(parts[0], parts[1], parts[2]);
+      if (date.getDay() !== 0) return;
+      var substitute = new Date(parts[0], parts[1], parts[2] + 1);
+      while (holidays[dateKey(substitute)]) substitute.setDate(substitute.getDate() + 1);
+      addHoliday(holidays, substitute.getFullYear(), substitute.getMonth(), substitute.getDate(), "振替休日");
+    });
+    return holidays;
+  }
+
+  function dateKey(date) {
+    return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+  }
+
+  function nthWeekday(year, month, weekday, occurrence) {
+    var first = new Date(year, month, 1).getDay();
+    return 1 + (weekday - first + 7) % 7 + (occurrence - 1) * 7;
+  }
+
+  function vernalEquinoxDay(year) {
+    return Math.floor(20.8431 + 0.242194 * (year - 1980) - Math.floor((year - 1980) / 4));
+  }
+
+  function autumnalEquinoxDay(year) {
+    return Math.floor(23.2488 + 0.242194 * (year - 1980) - Math.floor((year - 1980) / 4));
+  }
+
+  function countMonth(year, month, holidays) {
+    var days = new Date(year, month + 1, 0).getDate();
+    var workdays = 0;
+    var weekends = 0;
+    var holidayCount = 0;
+    for (var day = 1; day <= days; day += 1) {
+      var weekday = new Date(year, month, day).getDay();
+      if (weekday === 0 || weekday === 6) weekends += 1;
+      if (holidays[year + "-" + month + "-" + day]) holidayCount += 1;
+      if (weekday !== 0 && weekday !== 6 && !holidays[year + "-" + month + "-" + day]) workdays += 1;
+    }
+    return { days: days, workdays: workdays, weekends: weekends, holidays: holidayCount };
+  }
+
+  function makeCalendar(year, month, holidays) {
+    var stats = countMonth(year, month, holidays);
     var firstWeekday = new Date(year, month, 1).getDay();
     var html = '<article class="month-card' + (year === currentYear && month === currentMonth ? ' current' : '') + '">';
     html += '<div class="month-top"><div class="month-name">' + monthNames[month];
@@ -32,10 +120,13 @@
     for (var blank = 0; blank < firstWeekday; blank += 1) html += '<span class="day empty"></span>';
     for (var day = 1; day <= stats.days; day += 1) {
       var weekday = new Date(year, month, day).getDay();
+      var holidayName = holidays[year + "-" + month + "-" + day];
       var dayType = weekday === 0 || weekday === 6 ? "weekend" : "workday";
-      html += '<span class="day ' + dayType + '">' + day + '</span>';
+      if (holidayName) dayType += " holiday";
+      var label = year + "年" + (month + 1) + "月" + day + "日" + (holidayName ? "，" + holidayName : (dayType === "weekend" ? "，周末" : "，工作日"));
+      html += '<span class="day ' + dayType + '" aria-label="' + label + '" title="' + label + '">' + day + '</span>';
     }
-    html += '</div><div class="month-stats"><span><strong>' + stats.days + '</strong>总天数</span><span><strong>' + stats.weekends + '</strong>周末</span></div></article>';
+    html += '</div><div class="month-stats"><span><strong>' + stats.days + '</strong>总天数</span><span><strong>' + stats.weekends + '</strong>周末</span><span><strong>' + stats.holidays + '</strong>节假日</span></div></article>';
     return { html: html, stats: stats };
   }
 
@@ -43,14 +134,18 @@
     var annualDays = 0;
     var annualWorkdays = 0;
     var annualWeekends = 0;
+    var holidays = getJapaneseHolidays(year);
     var cards = [];
-    for (var month = 0; month < 12; month += 1) {
-      var result = makeCalendar(year, month);
+    var monthOrder = [];
+    for (var index = 0; index < 12; index += 1) monthOrder.push(index);
+    if (year === currentYear) monthOrder = [currentMonth].concat(monthOrder.filter(function (month) { return month !== currentMonth; }));
+    monthOrder.forEach(function (month) {
+      var result = makeCalendar(year, month, holidays);
       cards.push(result.html);
       annualDays += result.stats.days;
       annualWorkdays += result.stats.workdays;
       annualWeekends += result.stats.weekends;
-    }
+    });
     document.getElementById("summaryYear").textContent = year;
     document.getElementById("annualDays").textContent = annualDays;
     document.getElementById("annualWorkdays").textContent = annualWorkdays;

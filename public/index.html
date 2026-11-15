@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f7fb" />
-    <meta name="description" content="按周一至周五计算全年出勤日的简洁日历。" />
-    <title>全年出勤日历</title>
+    <meta name="description" content="结合日本法定节假日查看全年出勤日与每月日历。" />
+    <title>全年出勤日历｜日本法定节假日</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -33,7 +33,7 @@
             <span class="section-kicker">年度概览</span>
             <h2 id="summary-title"><span id="summaryYear"></span>年出勤概览</h2>
           </div>
-          <span class="workday-pill"><span class="legend-dot workday"></span>周一至周五计为出勤</span>
+          <span class="workday-pill"><span class="legend-dot workday"></span>工作日扣除日本法定节假日</span>
         </div>
         <div class="summary-grid">
           <div class="summary-item primary">
@@ -60,12 +60,13 @@
           <div class="legend" aria-label="日历图例">
             <span><i class="legend-dot workday"></i>出勤日</span>
             <span><i class="legend-dot weekend"></i>周末</span>
+            <span><i class="legend-dot holiday"></i>法定节假日</span>
           </div>
         </div>
         <div id="monthGrid" class="month-grid" aria-live="polite"></div>
       </section>
 
-      <footer>仅按星期计算，不含法定节假日及调休安排</footer>
+      <footer>按日本法定节假日规则计算；周末与节假日均不计入出勤日。</footer>
     </main>
     <script src="app.js"></script>
   </body>

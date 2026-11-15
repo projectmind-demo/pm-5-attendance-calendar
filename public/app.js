@@ -112,12 +112,20 @@
     return { days: days, workdays: workdays, weekends: weekends, holidays: holidayCount };
   }
 
+  function monthStatus(year, month) {
+    if (year < currentYear || (year === currentYear && month < currentMonth)) return "past-month";
+    if (year > currentYear || (year === currentYear && month > currentMonth)) return "future-month";
+    return "current";
+  }
+
   function makeCalendar(year, month, holidays) {
     var stats = countMonth(year, month, holidays);
     var firstWeekday = new Date(year, month, 1).getDay();
-    var html = '<article class="month-card' + (year === currentYear && month === currentMonth ? ' current' : '') + '">';
+    var status = monthStatus(year, month);
+    var statusLabel = status === "past-month" ? "過去" : (status === "future-month" ? "未来" : "今月");
+    var html = '<article class="month-card ' + status + '" aria-label="' + year + '年' + monthNames[month] + '、' + statusLabel + '">';
     html += '<div class="month-top"><div class="month-name">' + monthNames[month];
-    if (year === currentYear && month === currentMonth) html += '<span class="current-label">今月</span>';
+    html += '<span class="current-label month-status-label ' + status + '">' + statusLabel + '</span>';
     html += '</div><div class="month-workdays" aria-label="' + stats.workdays + '日間の総出勤日">' + stats.workdays + '<small>総出勤日</small></div></div>';
     html += '<div class="weekday-row" aria-hidden="true">';
     weekdays.forEach(function (weekday) { html += '<span>' + weekday + '</span>'; });
@@ -128,8 +136,10 @@
       var holidayName = holidays[year + "-" + month + "-" + day];
       var dayType = weekday === 0 || weekday === 6 ? "weekend" : "workday";
       if (holidayName) dayType += " holiday";
+      if (year === currentYear && month === currentMonth && day === today.getDate()) dayType += " today";
       var visibleHolidayName = holidayName && weekday !== 0 && weekday !== 6 ? holidayName : "";
-      var label = year + "年" + (month + 1) + "月" + day + "日" + (visibleHolidayName ? "、" + visibleHolidayName : (weekday === 0 || weekday === 6 ? "、土日" : "、平日"));
+      var isToday = year === currentYear && month === currentMonth && day === today.getDate();
+      var label = year + "年" + (month + 1) + "月" + day + "日" + (isToday ? "、今日" : "") + (visibleHolidayName ? "、" + visibleHolidayName : (weekday === 0 || weekday === 6 ? "、土日" : "、平日"));
       html += '<span class="day ' + dayType + '" aria-label="' + label + '" title="' + label + '"><b>' + day + '</b>' + (visibleHolidayName ? '<small class="holiday-name">' + visibleHolidayName + '</small>' : '') + '</span>';
     }
     html += '</div><div class="month-stats"><span><strong>' + stats.weekends + '</strong>土日</span><span><strong>' + stats.holidays + '</strong>祝日</span></div></article>';

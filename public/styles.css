@@ -57,6 +57,7 @@ h2 { font-size: 21px; letter-spacing: -.02em; }
 .legend-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
 .legend-dot.workday { background: var(--blue); }
 .legend-dot.weekend { background: #cbd3df; }
+.legend-dot.holiday { background: var(--orange); }
 .month-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .month-card { padding: 17px; transition: transform .2s ease, border-color .2s ease; }
 .month-card.current { border: 2px solid var(--blue); padding: 16px; }
@@ -71,6 +72,7 @@ h2 { font-size: 21px; letter-spacing: -.02em; }
 .day { display: flex; align-items: center; justify-content: center; min-width: 0; height: 27px; border-radius: 6px; color: #41516a; font-size: 11px; }
 .day.workday { color: var(--blue); background: var(--blue-soft); font-weight: 700; }
 .day.weekend { color: #a2adbd; background: #f5f7fa; }
+.day.holiday { color: #b45309; background: var(--orange-soft); box-shadow: inset 0 0 0 1px #f4c66b; font-weight: 800; }
 .day.empty { background: transparent; }
 .month-stats { display: flex; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 .month-stats strong { margin-right: 2px; color: var(--ink); font-size: 12px; }
@@ -94,7 +96,7 @@ footer { padding: 9px 0; color: var(--muted); font-size: 11px; text-align: cente
   .month-name { font-size: 16px; }
   .month-workdays { font-size: 17px; }
   .day { height: 25px; font-size: 10px; }
-  .month-stats { gap: 8px; font-size: 10px; }
+  .month-stats { justify-content: space-between; gap: 4px; font-size: 10px; }
   .month-stats strong { font-size: 11px; }
 }
 

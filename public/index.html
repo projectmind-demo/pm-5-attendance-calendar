@@ -1,72 +1,68 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f7fb" />
-    <meta name="description" content="结合日本法定节假日查看全年出勤日与每月日历。" />
-    <title>全年出勤日历｜日本法定节假日</title>
+    <meta name="description" content="日本の祝日を反映した年間出勤日と月別カレンダーを確認できます。" />
+    <title>年間出勤カレンダー｜日本の祝日</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="page-shell">
       <header class="hero">
-        <div class="eyebrow"><span class="eyebrow-dot"></span>工作日规划工具</div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span>出勤日プランナー</div>
         <div class="hero-row">
           <div>
-            <h1>全年出勤日历</h1>
-            <p>一眼查看每个月的工作日，轻松规划全年节奏。</p>
+            <h1>年間出勤カレンダー</h1>
+            <p>月ごとの出勤日を確認して、年間の予定を立てましょう。</p>
           </div>
           <div class="year-control">
-            <label for="yearSelect">查看年份</label>
+            <label for="yearSelect">表示する年</label>
             <div class="select-wrap">
-              <select id="yearSelect" aria-label="选择年份"></select>
+              <select id="yearSelect" aria-label="年を選択"></select>
               <span aria-hidden="true">⌄</span>
             </div>
           </div>
         </div>
       </header>
 
-      <section class="summary" aria-labelledby="summary-title">
-        <div class="summary-heading">
-          <div>
-            <span class="section-kicker">年度概览</span>
-            <h2 id="summary-title"><span id="summaryYear"></span>年出勤概览</h2>
-          </div>
-          <span class="workday-pill"><span class="legend-dot workday"></span>工作日扣除日本法定节假日</span>
-        </div>
-        <div class="summary-grid">
-          <div class="summary-item primary">
-            <span class="summary-label">全年出勤日</span>
-            <strong id="annualWorkdays">—</strong><span class="summary-unit">天</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">全年总天数</span>
-            <strong id="annualDays">—</strong><span class="summary-unit">天</span>
-          </div>
-          <div class="summary-item">
-            <span class="summary-label">周末休息日</span>
-            <strong id="annualWeekends">—</strong><span class="summary-unit">天</span>
-          </div>
-        </div>
-      </section>
-
       <section class="calendar-section" aria-labelledby="calendar-title">
         <div class="section-heading">
           <div>
-            <span class="section-kicker">全年日历</span>
-            <h2 id="calendar-title">每月出勤详情</h2>
+            <span class="section-kicker">年間カレンダー</span>
+            <h2 id="calendar-title">月別の出勤日</h2>
           </div>
-          <div class="legend" aria-label="日历图例">
+          <div class="legend" aria-label="カレンダーの凡例">
             <span><i class="legend-dot workday"></i>出勤日</span>
-            <span><i class="legend-dot weekend"></i>周末</span>
-            <span><i class="legend-dot holiday"></i>法定节假日</span>
+            <span><i class="legend-dot weekend"></i>土日</span>
+            <span><i class="legend-dot holiday"></i>祝日</span>
           </div>
         </div>
         <div id="monthGrid" class="month-grid" aria-live="polite"></div>
       </section>
 
-      <footer>按日本法定节假日规则计算；周末与节假日均不计入出勤日。</footer>
+      <section class="summary" aria-labelledby="summary-title">
+        <div class="summary-heading">
+          <div>
+            <span class="section-kicker">年間概要</span>
+            <h2 id="summary-title"><span id="summaryYear"></span>年の出勤概要</h2>
+          </div>
+          <span class="workday-pill"><span class="legend-dot workday"></span>平日から祝日を除いて計算</span>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-item primary">
+            <span class="summary-label">年間出勤日</span>
+            <strong id="annualWorkdays">—</strong><span class="summary-unit">日</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">土日</span>
+            <strong id="annualWeekends">—</strong><span class="summary-unit">日</span>
+          </div>
+        </div>
+      </section>
+
+      <footer>日本の祝日・国民の休日・振替休日を反映しています。土日と祝日は出勤日に含みません。</footer>
     </main>
     <script src="app.js"></script>
   </body>

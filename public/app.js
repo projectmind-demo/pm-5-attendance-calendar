@@ -1,8 +1,8 @@
 (function () {
   "use strict";
 
-  var monthNames = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
-  var weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+  var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+  var weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   var today = new Date();
   var currentYear = today.getFullYear();
   var currentMonth = today.getMonth();
@@ -33,29 +33,25 @@
     addHoliday(holidays, year, 10, 3, "文化の日");
     addHoliday(holidays, year, 10, 23, "勤労感謝の日");
 
-    // Include the boundary holidays needed to calculate a substitute holiday
-    // across years (for example, Sunday 2023-12-31 -> Tuesday 2024-01-02).
-    var previousYearEnd = new Date(year - 1, 11, 31);
-    if (previousYearEnd.getDay() === 0) {
-      addHoliday(holidays, year - 1, 11, 31, "年末の休日");
-    }
-    addHoliday(holidays, year + 1, 0, 1, "元日");
-
     // The Olympic Games caused one-off date changes in 2020 and 2021.
     if (year === 2020) {
       addHoliday(holidays, year, 6, 23, "海の日");
       addHoliday(holidays, year, 6, 24, "スポーツの日");
       addHoliday(holidays, year, 7, 10, "山の日");
       delete holidays[year + "-6-" + nthWeekday(year, 6, 1, 3)];
+      delete holidays[year + "-7-11"];
       delete holidays[year + "-9-" + nthWeekday(year, 9, 1, 2)];
+      delete holidays[year + "-10-" + nthWeekday(year, 10, 1, 2)];
+      addHoliday(holidays, year, 8, 21, "敬老の日");
     }
     if (year === 2021) {
       addHoliday(holidays, year, 6, 22, "海の日");
       addHoliday(holidays, year, 6, 23, "スポーツの日");
       addHoliday(holidays, year, 7, 8, "山の日");
       delete holidays[year + "-6-" + nthWeekday(year, 6, 1, 3)];
-      delete holidays[year + "-7-11"];
-      delete holidays[year + "-9-" + nthWeekday(year, 9, 1, 2)];
+      delete holidays[year + "-7-" + nthWeekday(year, 7, 1, 2)];
+      delete holidays[year + "-8-" + nthWeekday(year, 8, 1, 2)];
+      delete holidays[year + "-10-" + nthWeekday(year, 10, 1, 2)];
     }
 
     // A weekday between two holidays is a 国民の休日.
@@ -120,42 +116,39 @@
     var firstWeekday = new Date(year, month, 1).getDay();
     var html = '<article class="month-card' + (year === currentYear && month === currentMonth ? ' current' : '') + '">';
     html += '<div class="month-top"><div class="month-name">' + monthNames[month];
-    if (year === currentYear && month === currentMonth) html += '<span class="current-label">本月</span>';
+    if (year === currentYear && month === currentMonth) html += '<span class="current-label">今月</span>';
     html += '</div><div class="month-workdays">' + stats.workdays + '<small>出勤日</small></div></div>';
     html += '<div class="weekday-row" aria-hidden="true">';
     weekdays.forEach(function (weekday) { html += '<span>' + weekday + '</span>'; });
-    html += '</div><div class="days-grid" aria-label="' + year + '年' + monthNames[month] + '日历">';
+    html += '</div><div class="days-grid" aria-label="' + year + '年' + monthNames[month] + 'のカレンダー">';
     for (var blank = 0; blank < firstWeekday; blank += 1) html += '<span class="day empty"></span>';
     for (var day = 1; day <= stats.days; day += 1) {
       var weekday = new Date(year, month, day).getDay();
       var holidayName = holidays[year + "-" + month + "-" + day];
       var dayType = weekday === 0 || weekday === 6 ? "weekend" : "workday";
       if (holidayName) dayType += " holiday";
-      var label = year + "年" + (month + 1) + "月" + day + "日" + (holidayName ? "，" + holidayName : (dayType === "weekend" ? "，周末" : "，工作日"));
-      html += '<span class="day ' + dayType + '" aria-label="' + label + '" title="' + label + '">' + day + '</span>';
+      var visibleHolidayName = holidayName && weekday !== 0 && weekday !== 6 ? holidayName : "";
+      var label = year + "年" + (month + 1) + "月" + day + "日" + (visibleHolidayName ? "、" + visibleHolidayName : (dayType === "weekend" ? "、土日" : "、平日"));
+      html += '<span class="day ' + dayType + '" aria-label="' + label + '" title="' + label + '"><b>' + day + '</b>' + (visibleHolidayName ? '<small class="holiday-name">' + visibleHolidayName + '</small>' : '') + '</span>';
     }
-    html += '</div><div class="month-stats"><span><strong>' + stats.days + '</strong>总天数</span><span><strong>' + stats.weekends + '</strong>周末</span><span><strong>' + stats.holidays + '</strong>节假日</span></div></article>';
+    html += '</div><div class="month-stats"><span><strong>' + stats.weekends + '</strong>土日</span><span><strong>' + stats.holidays + '</strong>祝日</span></div></article>';
     return { html: html, stats: stats };
   }
 
   function render(year) {
-    var annualDays = 0;
     var annualWorkdays = 0;
     var annualWeekends = 0;
     var holidays = getJapaneseHolidays(year);
     var cards = [];
     var monthOrder = [];
     for (var index = 0; index < 12; index += 1) monthOrder.push(index);
-    if (year === currentYear) monthOrder = [currentMonth].concat(monthOrder.filter(function (month) { return month !== currentMonth; }));
     monthOrder.forEach(function (month) {
       var result = makeCalendar(year, month, holidays);
       cards.push(result.html);
-      annualDays += result.stats.days;
       annualWorkdays += result.stats.workdays;
       annualWeekends += result.stats.weekends;
     });
     document.getElementById("summaryYear").textContent = year;
-    document.getElementById("annualDays").textContent = annualDays;
     document.getElementById("annualWorkdays").textContent = annualWorkdays;
     document.getElementById("annualWeekends").textContent = annualWeekends;
     monthGrid.innerHTML = cards.join("");

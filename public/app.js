@@ -118,7 +118,7 @@
     var html = '<article class="month-card' + (year === currentYear && month === currentMonth ? ' current' : '') + '">';
     html += '<div class="month-top"><div class="month-name">' + monthNames[month];
     if (year === currentYear && month === currentMonth) html += '<span class="current-label">今月</span>';
-    html += '</div><div class="month-workdays">' + stats.workdays + '<small>出勤日</small></div></div>';
+    html += '</div><div class="month-workdays" aria-label="' + stats.workdays + '日間の総出勤日">' + stats.workdays + '<small>総出勤日</small></div></div>';
     html += '<div class="weekday-row" aria-hidden="true">';
     weekdays.forEach(function (weekday) { html += '<span>' + weekday + '</span>'; });
     html += '</div><div class="days-grid" aria-label="' + year + '年' + monthNames[month] + 'のカレンダー">';
@@ -142,7 +142,7 @@
     var holidays = getJapaneseHolidays(year);
     var cards = [];
     var monthOrder = [];
-    for (var index = 0; index < 12; index += 1) monthOrder.push(index);
+    for (var index = 11; index >= 0; index -= 1) monthOrder.push(index);
     monthOrder.forEach(function (month) {
       var result = makeCalendar(year, month, holidays);
       cards.push(result.html);
